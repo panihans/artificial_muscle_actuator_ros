@@ -1,0 +1,9 @@
+uint8 DIR_LEFT=0
+uint8 DIR_RIGHT=1
+uint8 DIR_NEUTRAL=2
+uint8 grip_direction            # grip left, right or return to the neutral position
+---
+float32 relative_grip_change    # change in grip potential relative to the previous position, unitless quantity
+bool succeeded                  # whether the action succeeded or not
+---
+float32 relative_grip_change    # change in grip potential relative to the previous position, unitless quantity
