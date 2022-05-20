@@ -66,18 +66,18 @@ class AMSoftGripDriver:
                 r.sleep()
         self.sema.release()
         def get_potential_left():
-            if self.feedback.icl_open_circuit_voltage > 1.2:
+            if self.feedback.icl_open_circuit_voltage > 1.1:
                 return GripperStatusResponse.POTENTIAL_NONE
-            elif self.feedback.icl_open_circuit_voltage > 1:
+            elif self.feedback.icl_open_circuit_voltage > 0.9:
                 return GripperStatusResponse.POTENTIAL_SMALL
             elif self.feedback.icl_open_circuit_voltage > 0.2:
                 return GripperStatusResponse.POTENTIAL_MEDIUM
             else:
                 return  GripperStatusResponse.POTENTIAL_LARGE
         def get_potential_right():
-            if self.feedback.icl_open_circuit_voltage < -1.2:
+            if self.feedback.icl_open_circuit_voltage < -1.1:
                 return GripperStatusResponse.POTENTIAL_NONE
-            elif self.feedback.icl_open_circuit_voltage < -1:
+            elif self.feedback.icl_open_circuit_voltage < -0.9:
                 return GripperStatusResponse.POTENTIAL_SMALL
             elif self.feedback.icl_open_circuit_voltage < -0.2:
                 return GripperStatusResponse.POTENTIAL_MEDIUM
