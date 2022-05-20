@@ -2,6 +2,9 @@ uint8 DIR_LEFT=0
 uint8 DIR_RIGHT=1
 uint8 DIR_RESET=2
 uint8 grip_direction            # grip left, right or return to the neutral position
+float32 min_speed=0.1
+float32 max_speed=1.0
+float32 grip_speed              # grip speed relative to the minimum and maximum of the gripper, between 0.1 and 1
 ---
 float32 relative_grip_change    # change in grip potential relative to the previous position, unitless quantity
 bool succeeded                  # whether the action succeeded or not

@@ -1,3 +1,4 @@
 ---
-float32 grip_potential_left
-float32 grip_potential_right
+float32 grip_potential_left         # potential deformation quantity to the left
+float32 grip_potential_right        # potential deformation quantity to the right
+bool error                          # true if the driver was unable to measure

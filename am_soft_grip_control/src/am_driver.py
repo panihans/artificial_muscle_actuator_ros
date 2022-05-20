@@ -68,7 +68,9 @@ class AMSoftGripDriver:
         if available:
             resp.grip_potential_left = max(0, min(50 - 41.6667 * self.feedback.icl_open_circuit_voltage, 100))
             resp.grip_potential_right = max(0, min(41.6667 * self.feedback.icl_open_circuit_voltage + 50, 100))
+            resp.error = False
         else:
+            resp.error = True
             resp.grip_potential_left = nan
             resp.grip_potential_right = nan
         return resp
@@ -169,11 +171,21 @@ class AMSoftGripDriver:
                         v = 1.3
                     else:
                         v = -1.3
-                    charge_start_time = self.send_charge(v, 0.001)
+                    speed = 0.001 * max(goal.min_speed, min(goal.grip_speed, goal.max_speed))
+                    charge_start_time = self.send_charge(v, speed)
                 elif self.is_actuator_charging():  # charge progress
                     rospy.logdebug('charging()')
                     self.gripper_action_server.publish_feedback(action_feedback)
                 elif self.is_actuator_stopped():  # charge done
+                    charge_start_time = self.send_measure()
+                elif self.is_actuator_measuring():
+                    # rospy.sleep(10)
+                    # rospy.logdebug(self.feedback.icl_open_circuit_voltage)
+                    # if self.feedback.icl_open_circuit_voltage < 1.2 or self.feedback.icl_open_circuit_voltage > -1.2:
+                    #     # restart charge condition
+                    #     rospy.logdebug('restart charge')
+                    #     charge_start_time = None
+                    # else:
                     rospy.logdebug('stopped()')
                     action_result.succeeded = True
                     action_result.relative_grip_change = action_feedback.relative_grip_change
