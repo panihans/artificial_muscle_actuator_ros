@@ -65,14 +65,32 @@ class AMSoftGripDriver:
                     break
                 r.sleep()
         self.sema.release()
+        def get_potential_left():
+            if self.feedback.icl_open_circuit_voltage > 1.2:
+                return GripperStatusResponse.POTENTIAL_NONE
+            elif self.feedback.icl_open_circuit_voltage > 1:
+                return GripperStatusResponse.POTENTIAL_SMALL
+            elif self.feedback.icl_open_circuit_voltage > 0.2:
+                return GripperStatusResponse.POTENTIAL_MEDIUM
+            else:
+                return  GripperStatusResponse.POTENTIAL_LARGE
+        def get_potential_right():
+            if self.feedback.icl_open_circuit_voltage < -1.2:
+                return GripperStatusResponse.POTENTIAL_NONE
+            elif self.feedback.icl_open_circuit_voltage < -1:
+                return GripperStatusResponse.POTENTIAL_SMALL
+            elif self.feedback.icl_open_circuit_voltage < -0.2:
+                return GripperStatusResponse.POTENTIAL_MEDIUM
+            else:
+                return  GripperStatusResponse.POTENTIAL_LARGE
         if available:
-            resp.grip_potential_left = max(0, min(50 - 41.6667 * self.feedback.icl_open_circuit_voltage, 100))
-            resp.grip_potential_right = max(0, min(41.6667 * self.feedback.icl_open_circuit_voltage + 50, 100))
+            resp.grip_potential_left = get_potential_left()
+            resp.grip_potential_right = get_potential_right()
             resp.error = False
         else:
             resp.error = True
-            resp.grip_potential_left = nan
-            resp.grip_potential_right = nan
+            resp.grip_potential_left = GripperStatusResponse.POTENTIAL_NONE
+            resp.grip_potential_right = GripperStatusResponse.POTENTIAL_NONE
         return resp
 
     def is_actuator_charging(self):
@@ -171,7 +189,7 @@ class AMSoftGripDriver:
                         v = 1.3
                     else:
                         v = -1.3
-                    speed = 0.001 * max(goal.min_speed, min(goal.grip_speed, goal.max_speed))
+                    speed = 0.001 * max(goal.MIN_SPEED, min(goal.grip_speed, goal.MAX_SPEED))
                     charge_start_time = self.send_charge(v, speed)
                 elif self.is_actuator_charging():  # charge progress
                     rospy.logdebug('charging()')
