@@ -10,7 +10,7 @@ project(am_soft_grip_control)
 find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
-  icl_soft_grip_msgs
+  am_soft_grip_msgs
 )
 
 ## System dependencies are found with CMake's conventions
